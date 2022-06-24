@@ -1,0 +1,721 @@
+---
+title: "TRABAJO FINAL"
+output: rmdformats::material
+date: '2022-04-22'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+library(rmdformats)
+```
+
+# A. Intro y objetivos
+
+## Introducción
+Durante mucho tiempo se ha intentado crear un indicador que mida el bienestar humano. Al respecto han surgido ideas como medir el PBI o el índice de felicidad. El primer indicador ha recibido fuertes críticas de la literatura pues esta solo mide la libertad de los mercados, pero no necesariamente el bienestar humano ni la gran desigualdad. Asimismo, la felicidad es un parametro muy abstracto que es dificil medir en distintas naciones, cultura y étnias. Una última porpuesta medición del bienestar humano es el Indice de Desarrollo Humano que intenta analizar el bienestar de los hombres de manera holística. En su índice inetenta agrergar mútiples dimensiones como los ingresos ciertamente, pero también, la salud, educación, hogar entre otros. 
+
+Aumentar el IDH es el porpósito de las naciones. En ese sentido, han surgido dos grandes corrientes explicativas. Por un lado, se encuentra la corriente económica. Esta sostiene que el crecimiento económico permite la disminución de la pobreza, por tanto del IDH.  El progreso económico genera el aumento de empleos, por tanto de ingresos a las familias. Así pues, mediante la eficiencia del mercado se puede aumentar el IDH. No obstante, si el Estado intercede en el desarrollo del mercado, hará qu pierda su eficiencia. El control de precios de mercado o la creación de empresas estatales solo genera la realintización de la dinámica del mercado.
+
+Por otro lado, se encuentra la corriente estatal. Esta sostiene que el Estado es el encargado del aumento del IDH. Esta sostiene que dejar al mercado sin regulaciones no permite el aumento de la calidad de vida. Esto solo genera grandes acumulaciones de capital y por ende, desgialdades. Asimismo, no es ncesario siempre tener crecimiento económico para redcuir la pobreza. Con pocos recursos pero con una buena redistribución se puede mejorar el IDH. En ese sentido, es necesario de una fuerte capacidad estatal para mejorar la calidad de vida, porque esta no aumentará espontáneamente por la mano invisible del mercado. 
+
+## Objetivos
+
+-Comprobar la influencia de la capacidad Estatal en el Indice de Desarrollo Humano
+
+
+-Comprobar la influencia de el Producto Bruto Interno en el Índice de desarrollo Humano
+
+
+-Crear un índice certero de la Capacidad Estatal
+
+
+-Crear un indice certero del Desarrollo Humano
+
+
+-Crear un modelo que explique la variación del Indice de Desarrollo HUmano
+
+
+-Agrupar los casos de acuerdo a sus características como IDH, Capacidad Estatal y PBI.
+
+
+# B. Explicación de la dependiente y sustentar con literatura las indpendendientes propuestas
+
+En este apartado se explica dos puntos:
+
+## Primero la definición de las variables
+
+En primer lugar, de acuerdo al Instituto Peruano de Economía, el Programa de las Naciones Unidas para el Desarrollo ha publicado el Informe sobre Desarrollo Humano desde 1990. Este informe presenta indicadores de desarrollo que analizan los problemas de desarrollo, las tendencias, el progreso y las políticas de las Naciones Unidas. 189 países. El Programa de las Naciones Unidas para el Desarrollo resume estas variables en lo que se conoce como Índice de Desarrollo Humano - el Índice de Desarrollo Humano, que mide el progreso promedio de un país en tres dimensiones básicas del desarrollo: larga vida y salud, acceso al conocimiento y un buen nivel de vivir
+
+Además, el Índice de Desarrollo Humano se utiliza para determinar la clasificación mundial del desarrollo humano. Este ranking anual ayuda a seguir el desarrollo de un país a lo largo del tiempo, por un lado, y por otro lado, para comparar su situación con otros países. Como resultado, los gobiernos pueden comprender mejor sus opciones de crecimiento y la ayuda internacional puede asignarse de manera inteligente.
+
+En segundo lugar, de acuerdo al Instituto Peruano de Economía, el Producto Bruto Interno refiere al valor de los bienes y servicios finales producidos durante un período de tiempo en un territorio. Solo se refiere a bienes y servicios finales porque sus precios incluyen el valor de los bienes intermedios. Por lo tanto, la inclusión de bienes intermedios dará lugar a una doble contabilización.
+
+En tercer lugar, de acuerdo a la CEPAL, La capacidad del Estado está íntimamente relacionada con la implementación de políticas públicas. Es la adecuación de los casos. Los gobiernos, a través de las políticas públicas, adquieren los niveles más altos posibles de valor social. Asimismo, Grindle (1996) afirma que “un estado competente es un estado que demuestra la capacidad de crear y mantener funciones institucionales, técnicas, administrativas y políticas de manera efectiva”.
+
+
+
+
+## Segundo, se explica las relaciones que guardan las variables independientes con la variable dependiete de acuerdo a la literatura.
+
+Respecto a la relación entre el PBI Y el IDH, según, Fernando Vásquez, existe un vínculo entre el crecimiento económico y el desarrollo humano  que funciona positivamente en ambos direcciones.Para maximizar sus posibilidades. Este 'círculo de virtud' requiere políticas para fortalecer estos vínculos. Po un lado  se requiere de medidas para garantizar que los ingresos superiores derivados del crecimiento económico se traduzca en gastos que se empleen para el desarrollo humano. Por otro lado, se necesita de políticas públicas que generen que esa capacidad humana se convierta en productividad efectiva a través de un incremento en la inversión privada y generación de empleo. De modo que, si bien ambas variables pueden ser potencialmente sinergicas, para que se produzca dicho resultado es necesario de intervenciones políticas.
+
+Por otro lado, la relación entre la capacidad estatal y el IDH también según la literatura es positiva. De acuerdo a Fabio Repetto (2008), la capacidad estatal es un requisito para el mejoramiento de la Política social en América Latina. Evidentemente cuando hay una mayor política social, incrementa el bienestar humano. De igual modo, Valenzuela (2019) sostiene que el desarrollo de las capacidades humanas se realiza en base a servicios públicos cultores de capacidades. 
+
+# C. Analisis factorial 
+
+```{r echo=FALSE,message=FALSE}
+library(rio)
+data2=import("https://github.com/javi902/Trabajo_final/blob/main/data.xls?raw=true")
+```
+
+```{r echo=FALSE,message=FALSE}
+dontselect=c("pais", "pbi")
+select=setdiff(names(data2),dontselect) 
+theData=data2[,select] # sin los Scores ni nombre de país.
+
+
+# esta es:
+library(polycor)
+corMatrix=polycor::hetcor(theData)$correlations
+library(psych)
+```
+
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+library(GPArotation)
+resfa <- fa(theData,
+            nfactors = 2,
+            cor = 'mixed',
+            rotate = "varimax",
+            fm="minres")
+
+```
+
+
+Las variables propuestas son extraidas de la base de datos del Banco Mundial. Estas aluden a lo siguiente:
+
+
+1."esper_vida" es la esperanza de vida al nacer total (años)
+
+
+2."consumo" es el consumo medio per cápita según encuestas , población total
+
+
+3."fin primaria" es la Tasa de finalización de la educación de la educación primario, total
+
+
+4."adminis" es la calificación de la calidad de la administración publica de la CPIA (1 al 6)
+
+
+5."gestion" es el Promedio grupal de insituciones y gestión del sector público de la CPIA(1 al 6)
+
+
+6."protec" es la calificación de protección social de la CPIA (1 al 6)
+
+
+A continuación se da paso a mostrar un análisis factorial:
+
+```{r echo=FALSE,message=FALSE}
+fa.diagram(resfa)
+```
+ Las variables pertenecientes a grupo guardan fuerte correlación entre sí. Si dichas variables tienen una fuerte correlación entre sí es porque significan al parecido. Por tanto, conjuntamente pueden ser un índice. En ese sentido, como se ve en el gráfico anterior se han formado dos grupos  que seran dos índices. 
+ 
+En el primer grupo se encuentran las variables de la "esperanza de vida", "finalización de la primaria", y el "consumo económico". Todas ellas aluden al desarrollo del hombre en las múltiples dimensiones. La primera a la salud, la segunda a la educación y la tercera a sus ingresos correspondiantamente. Así que las tres variables se puede englobar en el concepto de desarrollo humano. Así pues de la suma de las tres se pude obtener el Índice de Desarrollo Humano. 
+
+En el segundo grupo se encuentran las variables de la " la calificación de la administración", "la calificación de la gestión" y finalmente la "calificación en políticas de protección". Al parecer dichas varibales guardan relación en la idea de la capacidad estatal. Así pues, sumando las tres se puede obtener el índice de Capacidad Estatal.
+
+
+# D. Analisis de regresion 
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+data4=import("https://github.com/javi902/Trabajo_final/blob/main/data.xls?raw=true")
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+data4=na.omit(data4)
+data4$idh=data4$fin_primaria+data4$esper_vida+data4$consumo
+
+data4$IDH=data4$idh-97.54
+data4$IDH=data4$IDH/(max(data4$IDH)-min(data4$IDH))*10
+data4$cap_est=data4$gestion+data4$adminis+data4$protec
+
+data4$CAP_EST=data4$cap_est-6.5
+data4$CAP_EST=data4$CAP_EST/(max(data4$CAP_EST)-min(data4$CAP_EST))*10
+
+```
+En el presente trabajo se propuso dos hipótesis explicativas del Indice de Desarrollo humano.
+
+
+H1:La capacidad estatal influye en el Índice de Desarrollo Humano.
+
+H2:La capcidad estatal conjuntamente con el Producto Bruto Interno influyen en el Indice de Desarrollo Humano. 
+
+Luego de realizar un análisis de regresión a ambas hipótesis se obtuvo que estadíticamente la hipotesis explica en igual medida que la capacidad estatal. Por tanto, la variable de capacidad estatal es la que explica significativamente la variable dependiente, mientras que le PBI, no explica sginificativamente. 
+
+En ese sentido, a contiución se muestra el modelo1(Variable indpendiente=Capacidad Estatal, Variable dependiente=índice de Desarrollo Humano)
+
+```{r echo=FALSE,message=FALSE}
+modelo1=formula(IDH~CAP_EST,data = data4)
+```
+Veamos el reusltado:
+```{r echo=FALSE,message=FALSE}
+library(stargazer)
+model1=lm(modelo1,data=data4)
+stargazer(model1,type = "text",intercept.bottom = FALSE)
+```
+Del modelo 1 podemos inferir lo siguiente:
+
+
+- Primero que la Capacidad Estatal ("CAP_EST") tiene efecto significativo en la variable dependiente (pues su p.vaule es menor a 0,05)
+
+
+- Segundo, que su efecto es directamente proporcional (pues el coeficiente calculado es positivo).Es decir, cuando aumenta la capacidad estatal, se espera de igual modo que aumente el bienestar humano(IDH), y en viceversa. 
+
+
+- Tercero, que la magnitud de ese efecto es 0.737, lo que indica cuanto varía el Indice de Desarrollo HUmano(IDH) en promedio cuando la capacidad estatal se incremente en una unidad.
+
+
+- Cuarto, el modelo tiene un valor explicativo de aproximadamente 58% , siendo este valor alto en las Ciencias Sociales. Por ende, el modelo 1 es sumamente válido estadísticamente. 
+
+
+Esto es información suficiente para representar esa relación con una ecuación:
+
+```{r}
+#IDH=2.218+0.737*CAP_EST
+```
+
+
+
+
+# E. Analisis de cluster 
+
+En esta sección se realiza análisis de cluster. Es decir, de acuerdo al programa estadístico R se agrupa a los países según sus semejanzas. Los puntos a comparar entre países son sus tasa de esperanza de vida, consumo medio per capita, tasa de la finalización de la educación primaria, calidad de la administración publica, calidad de gestión del sector público, calidad de la protección social del Estado y el Prodcuto Bruto Interno. 
+
+El gráfico de punto siguiente muestra la agrupación de países por colores. 
+```{r echo=FALSE,message=FALSE}
+library(rio)
+allData1=import("https://github.com/javi902/Trabajo_final/blob/main/data.xls?raw=true")
+```
+
+```{r echo=FALSE,message=FALSE}
+
+###Transformando
+library(BBmisc)
+allData1[,-1]=BBmisc::normalize(allData1[,-1],method='standardize')
+allData1=allData1[complete.cases(allData1),]
+
+```
+
+
+```{r echo=FALSE,message=FALSE}
+
+#Preparemos la data para la clusterización
+
+dataClus=allData1[,-1]
+row.names(dataClus)=allData1$pais
+
+#Calculo de la matriz de distancias:
+
+library(cluster)
+g.dist = daisy(dataClus, metric="gower")
+library(factoextra )
+```
+
+```{r echo=FALSE,message=FALSE}
+
+set.seed(123)
+grupos=5
+
+
+### diana
+res.diana <- hcut(g.dist, k = grupos,hc_func='diana')
+dataClus$diana=res.diana$cluster
+```
+
+
+
+
+
+```{r echo=FALSE,message=FALSE}
+library(magrittr)
+
+silDIANA=data.frame(res.diana$silinfo$widths)
+silDIANA$PAIS=row.names(silDIANA)
+poorDIANA=silDIANA[silDIANA$sil_width<0,'PAIS']%>%sort()
+```
+
+
+
+```{r echo=FALSE,message=FALSE}
+#proyectando los casos en dos dimensiones:
+
+proyeccion = cmdscale(g.dist, k=2,add = T) # k es la cantidad de dimensiones
+dataClus$dim1 <- proyeccion$points[,1]
+dataClus$dim2 <- proyeccion$points[,2]
+base= ggplot(dataClus,aes(x=dim1, y=dim2,label=row.names(dataClus))) 
+base + geom_text(size=2, aes(color=as.factor(diana)))  + labs(title = "DIANA") 
+```
+Como vemos se han clasterizado los países en 5 grupos.
+
+
+EN EL PRIMER GRUPO estan países como Guinea, Haiti, República Centro Africana. En general estos países estan carterizado por bajo nivel de capacidad estatal, bajo nivel de IDH, bajo niveles de PBI.
+
+
+EN EL SEGUNDO GRUPO países como Panamá, Perú, Bolivia En general estos países estan carterizado por  niveles bajos de capacidad estatal, niveles medios de IDH, niveles medios de PBI.
+
+
+EN EL TERCER GRUPO píses como Canadá, Suiza, Paises Bajos.En general estos países estan carterizado por alto nivel de capacidad estatal,alto nivel de IDH y altos niveles de PBI.
+
+
+EN EL CUARTO GRUPO países como República Democrática de Lao y Mongolia. En este grupo solo se encuentran pocos países y además distan del patron concavo inverso. Por tanto, podemos decir que es un grupo outlyer.
+
+
+EN EL QUINTO GRUPO píses como Brasil, España, China. En general estos países estan carterizado por niveles medios de capacidad estatal, niveles medios de IDH y niveles medios-altos de PBI.
+
+
+
+# F. Conclusiones
+
+Se concluye y recomienda los siguientes puntos:
+
+- PRIMERO, De acuerdo a los análisis estadísticos la capacidad estatal explica significativamente el Indice de Desarrollo humano. Es decir, cuando aumenta la capacidad estatal, aumenta el bienestar humano y viceversa. Así pues, un Estado fuerte y capaz permite la mejora de la calidad de vida de los ciudadanos. El Estado puede prometer políticas públicas en favor de las personas, sin embago, si no tiene la capacidad de una buena implementación esta no sera eficaz.
+
+
+- SEGUNDO, De acuerdo a los análsis estadísticos, el Producto Bruto Interno no explica significativamente el Índice de Desarrollo Humano. En otras palabras, cuando aumenta el PBI, no necesariamente aumenta la calidad de vida. Así pues, una nación que pretenda aumentar su calidad de vida generando solamente mayor crecimiento económico dificilmente asegura el bienestar humano. Ciertamente, el crecimiento económico genera recursos y capital para mejorar la vida de las personas. Sin embargo, estos recursos no llegarán a las personas de manera automática. Por ello es necesario de la intervención del Estado para una mejor redistribución. 
+
+
+- TERCERO, Un óptimo indicador de la Capacidad Estatal debe incluir la dimensión de la capacidad de gestión, capacidad de administración y capacidad de llevar a cabo políticas de protección social. Como recomendación se podrían agregar otras dimensiones como la dimensión de legitimidad. Puesto que las políticas o órdenes estatales van a ser aceptadas por la población en la medida que sean legitimas. 
+
+
+- CUARTO, un óptimo indicador del Desarrollo Humano debe incluir la dimensión de la calidad educativa, la calidad de la salud y la capacidad de consumo. No obsntante, como recomendación se podría agregar al desarrollo humano la dimensión del oseo. El humano no necesariamente debe ser productivo todo el tiempo, es necesario un tiempo de recreación, relajación para meditar o simplemente descansar. 
+
+
+- QUINTO, El modelo propuesto es el más idóneo. Cuando se quiere explicar el IDH, la mejor variable independiente es la Capacidad Estatal, no es necesario  incluir el PBI, pues este no aporta significativamente a la explicación. Este modelo explica aproximadamente el 58%, siendo este un valor bastante alto en los modelos explicativos de las Ciencias Sociales.
+
+
+- SEXTO, al clusterizar los países de acuerdo a variables relaciones al bienestar, capacidad estatal y desarrollo económico, se generan 5 grupos. Al parecer se agrupan de acuerdo a su desarrollo holísico. Asípues, en el nivel bajo de desarrollo se encuentra el primer grupo en el que estan países como Guinea, Haití y República Centro Africana; en el nivel de desarrollo medio se encuentra el segundo grupo en el que estan países como Perú, Panamá y Bolivia; y finalmente, en el nivel de desarrollo alto se encunetra países como Canadá, Suiza y Países Bajos. 
+
+
+
+# G. ANEXOS
+
+## * Todo Factorial
+
+```{r echo=FALSE,message=FALSE}
+library(rio)
+data2=import("https://github.com/javi902/Trabajo_final/blob/main/data.xls?raw=true")
+```
+
+
+Proceso del Análisis Factorial Exploratorio (EFA)
+
+```{r echo=FALSE,message=FALSE}
+dontselect=c("pais", "pbi")
+select=setdiff(names(data2),dontselect) 
+theData=data2[,select] # sin los Scores ni nombre de país.
+
+
+# esta es:
+library(polycor)
+corMatrix=polycor::hetcor(theData)$correlations
+```
+1.Explorar correlaciones:
+Sin evaluar significancia:
+```{r echo=FALSE,message=FALSE}
+library(ggcorrplot)
+
+ggcorrplot(corMatrix)
+```
+Si puedes ver bloques correlacionados, hay esperanza de un buen análisis factorial.
+
+2.Verificar si los datos permiten factorizar:
+```{r echo=FALSE,message=FALSE}
+library(psych)
+psych::KMO(corMatrix) 
+```
+Dado que el Overal MSA  es 0.81 es mayor a 0.6 se puede decir que los datos permiten factorizar. En particular, la variable de capacidad de protección social del Estado es la que más esta apuntando. Mientras que la gestión pública es la que no esta tan adecuada para el proceso.
+
+
+
+3.Verificar si la matriz de correlaciones es adecuada
+Aquí hay dos pruebas:
+
+- Hnula: La matriz de correlacion es una matriz identidad
+```{r echo=FALSE,message=FALSE}
+cortest.bartlett(corMatrix,n=nrow(theData))$p.value>0.05
+```
+
+
+
+- Hnula: La matriz de correlacion es una matriz singular.
+
+```{r echo=FALSE,message=FALSE}
+library(matrixcalc)
+
+is.singular.matrix(corMatrix)
+```
+5.Determinar en cuantos factores o variables latentes pudieron redimensionar los datos:
+
+```{r echo=FALSE,message=FALSE}
+fa.parallel(theData,fm = 'ML', fa = 'fa',correct = T)
+```
+
+Se sugiere 2. Es decir que entre esas variables puede haber dos conceptos.
+
+6.Redimensionar un número menor de factores
+Resultado inicial:
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+library(GPArotation)
+resfa <- fa(theData,
+            nfactors = 2,
+            cor = 'mixed',
+            rotate = "varimax",
+            fm="minres")
+print(resfa$loadings)
+```
+Resultado mejorado (solo apropiado si hay más de un factor):
+
+```{r echo=FALSE,message=FALSE}
+print(resfa$loadings,cutoff = 0.5)
+```
+Cuando logramos que cada variable se vaya a un factor, tenemos una estructura simple .
+
+Resultado visual:
+
+```{r echo=FALSE,message=FALSE}
+fa.diagram(resfa)
+```
+Como vemos hay dos conceptos. El MR1 pereteciente a la capacidad estatal y el MR2 a el Indice de Desarrollo Humano.
+
+7.Evaluando el resultado obtenido:
+- ¿Qué variables aportaron más a los factores?
+```{r echo=FALSE,message=FALSE}
+sort(resfa$communality)
+```
+
+¿Qué variables contribuyen a más de un factor?
+```{r echo=FALSE,message=FALSE}
+sort(resfa$complexity)
+```
+
+## * Elaboración de índices
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+data3=import("https://github.com/javi902/Trabajo_final/blob/main/data.xls?raw=true")
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+data3=na.omit(data3)
+```
+
+```{r }
+#Elaborando Indice de Desarrollo Humano
+data3$idh=data3$fin_primaria+data3$esper_vida+data3$consumo
+```
+```{r }
+data3$IDH=data3$idh-97.54
+data3$IDH=data3$IDH/(max(data3$IDH)-min(data3$IDH))*10
+```
+
+```{r }
+# Elaborando Índice de capacidad estatal
+data3$cap_est=data3$gestion+data3$adminis+data3$protec
+
+```
+```{r }
+data3$CAP_EST=data3$cap_est-6.5
+data3$CAP_EST=data3$CAP_EST/(max(data3$CAP_EST)-min(data3$CAP_EST))*10
+
+```
+
+
+## * Regresion y diagnosticos
+
+
+###  HIPÓTESIS 1
+El Indice de Desarrollo Humano de un país es afectado por su Capacidad Estatal la cual se representa en R así:
+
+```{r echo=FALSE,message=FALSE}
+modelo1=formula(IDH~CAP_EST,data = data3)
+```
+Veamos el reusltado:
+```{r echo=FALSE,message=FALSE}
+library(stargazer)
+model1=lm(modelo1,data=data3)
+stargazer(model1,type = "text",intercept.bottom = FALSE)
+```
+
+Al probar esta hipótesis vemos:
+- Primero que "gestion" tiene efecto significativo pues su p.vaule es menor a 0,05.
+- Segundo, que ese efecto es directo, pues el coeficiente calculado es positivO.
+- Tercero que la magnitud de ese efecto es 0.737, lo que indica cuanto varía "demo" en promedio cuando idh se incremente en una unidad.
+
+Esto es información suficiente para representar esa relación con una ecuación:
+```{r}
+#IDH=2.218+0.737*CAP_EST
+```
+Justamente el R cuadrado ajustado (0.577) nos brinda un porcentaje (multiplicalo por 100) que da una pista de nuestra cercanía a una situación perfecta (cuando vale 1).
+
+
+###  HIPÓTESIS 2
+El índice de Desarrollo humano depende de la capacidad estatal y el pbi
+```{r echo=FALSE,message=FALSE}
+
+modelo2=formula(IDH~CAP_EST+pbi,data = data3)
+library(stargazer)
+model2=lm(modelo2,data=data3)
+stargazer(model2,type = "text",intercept.bottom = FALSE)
+```
+
+- Primero que idh tiene efecto significativo al 0.00 (es mucho menor a 0,05).
+- Segundo, que ese efecto es directo, pues el coeficiente calculado es positivo.
+- Tercero que la magnitud de ese efecto es 9.263, lo que indica cuanto varía "demo" en promedio cuando idh se incremente en una unidad. 
+
+- Por otro lado, el pbi no tiene efecto significativo al ser mayor que el p-value
+
+
+
+### ANÁLISIS DE VARIANZA
+```{r echo=FALSE,message=FALSE}
+
+tanova=anova(model1,model2)
+stargazer(tanova,type = 'text',summary = F,title = "Table de Análisis de Varianza")
+```
+HO=los modelos no difieren (no se ha reducido el error al pasar de un modelo a otro).
+Como la comparaciòn no es significativa al ser el p-value mayor a 0.05, aceptamos la igualdad de los modelos. Es decir, el modelo 2 no reduce el error al incluir una variable màs. Por tanto, tomammos al modelo 1 como el más óptimo. 
+
+
+###  DIAGNOSTICO DE REGRESIÓN
+- 1.LINEALIDAD
+lìnea roja debe tender a la horizonal
+
+```{r echo=FALSE,message=FALSE}
+
+plot(model1, 1)
+```
+La línea roja en general tiene a la horizontialidad, sin embargo presenta como una curva en la horizontal 4.
+
+
+- 2.HOMOCEDASTICIDAD
+
+linea roja debe tender a horizontal
+```{r echo=FALSE,message=FALSE}
+
+plot(model1, 3)
+```
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+library(lmtest)
+bptest(model1)
+```
+HO: El modelo presenta homocedasticidad
+La probabilidad de homocedasticidad es alta (p-value es mayor a 0.05), de ahi que se acepta que el modelo muestre homocedasticidad. 
+Se entiende la homocesaticidad como la varianza del error condicional a las variables explicativas es constante a lo largo de las observaciones.
+En otras palabras, que el error de predicción debe ser masomenos igual a lo largo de toda la "y".
+
+- 3.NORMALIDAD DE RESIDUOS
+
+Los residuos, la diferencia entre IDH REAL Y IDH EXPECTATIVA, deben distribuirse de manera normal:
+puntos cerca a la diagonal
+
+```{r echo=FALSE,message=FALSE}
+
+plot(model1, 2)
+```
+Los puntos se acercan a las líneas puntiagudas. pero al final se alejan un tanto.
+
+Podemos aplicar el test de Shapiro a los residuos:
+```{r echo=FALSE,message=FALSE}
+
+shapiro.test(model1$residuals)
+```
+Ho=La muestra proviene de una distribución normal 
+Dado que el p-vaule es mayor a 0.05 se acepta la hipótesis nula. Por tanto, se afirma que la muestra sí tiene distribución normal
+
+
+- 4.NO MULTICOLINEALIDAD---No se aplica pues el modelo1 solo consta de una variable independiente
+
+
+- 5.VALORES INFLUYENTES:
+
+```{r echo=FALSE,message=FALSE}
+
+plot(model1, 5)
+```
+No hay casos que trastoquen el modelo 1
+
+Asi podemos recuperar los casos influyentes:
+```{r echo=FALSE,message=FALSE}
+
+checkmodel1=as.data.frame(influence.measures(model1)$is.inf)
+head(checkmodel1)
+```
+
+Normalmente le prestamos atencion al indice de Cook y a los valores predecidos (los hat values):
+```{r echo=FALSE,message=FALSE}
+
+
+checkmodel1[checkmodel1$cook.d & checkmodel1$hat,]
+```
+
+
+
+
+## * Todo clustering
+```{r echo=FALSE,message=FALSE}
+library(rio)
+allData=import("https://github.com/javi902/Trabajo_final/blob/main/data.xls?raw=true")
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+
+###Transformando
+library(BBmisc)
+allData[,-1]=BBmisc::normalize(allData[,-1],method='standardize')
+allData=na.omit(allData)
+
+####descriptivos:
+summary(allData)
+```
+```{r}
+#Veamos correlaciones:
+
+cor(allData[,-1])
+```
+
+```{r echo=FALSE,message=FALSE}
+
+#Preparemos la data para la clusterización
+
+dataClus=allData[,-1]
+row.names(dataClus)=allData$pais
+
+#Calculo de la matriz de distancias:
+
+library(cluster)
+g.dist = daisy(dataClus, metric="gower")
+```
+
+### 1.Proponer cantidad de clusters:
+
+Las siguientes gráficas proponen la cantidad de clusters a solicitar (usando el estadístico gap):
+
+- PARA PAM
+```{r echo=FALSE,message=FALSE}
+library(factoextra)
+fviz_nbclust(dataClus, pam,diss=g.dist,method = "gap_stat",k.max = 10,verbose = F)
+```
+
+- PARA JERARQUICO AGNES
+```{r echo=FALSE,message=FALSE}
+
+
+fviz_nbclust(dataClus, hcut,diss=g.dist,method = "gap_stat",k.max = 10,verbose = F,hc_func = "agnes")
+
+```
+
+- PARA JERARQUICO DIANA
+```{r echo=FALSE,message=FALSE}
+
+fviz_nbclust(dataClus, hcut,diss=g.dist,method = "gap_stat",k.max = 10,verbose = F,hc_func = "diana")
+```
+Luego de analizar los gráficos, se propone 5 grupos
+
+#### 2. Evaluemos resultados
+
+Pidamos TRES grupos:
+pam, agnes, diana
+```{r echo=FALSE,message=FALSE}
+###pam
+set.seed(123)
+grupos=5
+res.pam=pam(g.dist,k = grupos,cluster.only = F)
+dataClus$pam=res.pam$cluster
+
+###agnes
+res.agnes<- hcut(g.dist, k =grupos,hc_func='agnes',hc_method = "ward.D")
+dataClus$agnes=res.agnes$cluster
+
+### diana
+res.diana <- hcut(g.dist, k = grupos,hc_func='diana')
+dataClus$diana=res.diana$cluster
+```
+
+Ahora veamos a cuál le fue mejor:
+
+
+- PAM
+
+
+```{r echo=FALSE,message=FALSE}
+
+
+fviz_silhouette(res.pam)
+```
+- AGNES
+
+```{r}
+fviz_silhouette(res.agnes)
+```
+- DIANA
+
+```{r}
+fviz_silhouette(res.diana)
+```
+Se puede concluir que estos datos fueron mejor clusterizados usando el metodo jerarquico diana, pues tiene la silueta más grande que es de 0.33.
+
+
+```{r echo=FALSE,message=FALSE}
+library(magrittr)
+silPAM=data.frame(res.pam$silinfo$widths)
+silPAM$PAIS=row.names(silPAM)
+poorPAM=silPAM[silPAM$sil_width<0,'PAIS']%>%sort()
+
+silAGNES=data.frame(res.agnes$silinfo$widths)
+silAGNES$PAIS=row.names(silAGNES)
+poorAGNES=silAGNES[silAGNES$sil_width<0,'PAIS']%>%sort()
+
+silDIANA=data.frame(res.diana$silinfo$widths)
+silDIANA$PAIS=row.names(silDIANA)
+poorDIANA=silDIANA[silDIANA$sil_width<0,'PAIS']%>%sort()
+
+###
+library("qpcR") 
+mal_Clus=as.data.frame(qpcR:::cbind.na(poorPAM, poorAGNES,poorDIANA))
+mal_Clus
+```
+Podemos usar teoría de conjuntos para ver qué los casos mal clusterizados en todos las técnicas:
+
+```{r echo=FALSE,message=FALSE}
+intersect(poorPAM,poorAGNES)
+# en PAM pero NO en Agnes
+setdiff(poorPAM,poorAGNES)
+setdiff(poorAGNES,poorPAM)
+```
+
+### 3.Graficando
+Por lo anterior sabemos que usaremos la técnica diana. Verifiquemos las etiquetas:
+```{r echo=FALSE,message=FALSE}
+original=aggregate(.~ agnes, data=dataClus,mean)
+original[order(original$pbi),]
+```
+
+```{r echo=FALSE,message=FALSE}
+dataClus$diana=dplyr::recode(dataClus$diana, `4` = 1, `3`=2,`1`=3,`2`=4 ,`5`=5)
+```
+
+Proyectando los casos en dos dimensiones:
+
+```{r echo=FALSE,message=FALSE}
+#proyectando los casos en dos dimensiones:
+
+proyeccion = cmdscale(g.dist, k=2,add = T) # k es la cantidad de dimensiones
+dataClus$dim1 <- proyeccion$points[,1]
+dataClus$dim2 <- proyeccion$points[,2]
+base= ggplot(dataClus,aes(x=dim1, y=dim2,label=row.names(dataClus))) 
+base + geom_text(size=2, aes(color=as.factor(diana)))  + labs(title = "DIANA") 
+```
+
+
+
+
+
